@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Report an item{% endblock %}
+{% block content %}
+<div class="form-layout">
+  <aside class="form-aside"><div class="eyebrow">HELP YOUR CAMPUS</div><h1>Every item has a way back.</h1><p>Share a few details so the campus community can help reunite an item with its owner.</p><div class="aside-tip"><span>✦</span><div><b>Helpful tip</b><p>Describe unique features, but don't publish private ID numbers or sensitive information.</p></div></div></aside>
+  <section class="form-panel"><a class="back-link" href="{{ url_for('index') }}">← Back to reports</a><h2>Report an item</h2><p class="form-subtitle">Fields marked with * are required.</p>
+  <form method="post" class="report-form">
+    <div class="field"><label>Report type *</label><div class="radio-row">{% for t in item_types %}<label class="radio-card"><input type="radio" name="item_type" value="{{ t }}" {% if loop.first %}checked{% endif %}><span>{{ "⌕" if t == "Lost" else "✓" }}</span><b>{{ t }} item</b><small>{{ "I can't find my item" if t == "Lost" else "I found something" }}</small></label>{% endfor %}</div></div>
+    <div class="field"><label for="title">Item name *</label><input id="title" name="title" required maxlength="120" placeholder="e.g. Blue water bottle"></div>
+    <div class="field"><label for="category">Category *</label><select id="category" name="category" required><option value="">Choose a category</option>{% for c in categories %}<option>{{ c }}</option>{% endfor %}</select></div>
+    <div class="field"><label for="description">Description *</label><textarea id="description" name="description" required rows="4" placeholder="Color, brand, identifying details..."></textarea></div>
+    <div class="field-row"><div class="field"><label for="location">Last seen / found at *</label><input id="location" name="location" required placeholder="e.g. Central Library"></div><div class="field"><label for="item_date">Date *</label><input id="item_date" name="item_date" type="date" required></div></div>
+    <div class="field-row"><div class="field"><label for="contact_name">Your name *</label><input id="contact_name" name="contact_name" required maxlength="80" placeholder="Name"></div><div class="field"><label for="contact_email">Contact email *</label><input id="contact_email" name="contact_email" type="email" required maxlength="120" placeholder="you@example.com"></div></div>
+    <div class="privacy-note">🔒 Your contact email is shown on the report detail page. Use a campus email if possible.</div>
+    <button class="button button-dark submit-button" type="submit">Publish report <span>→</span></button>
+  </form></section>
+</div>
+{% endblock %}

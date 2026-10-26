@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Find your item{% endblock %}
+{% block content %}
+<section class="hero">
+  <div class="hero-copy">
+    <div class="eyebrow">SMART CAMPUS · LOST &amp; FOUND</div>
+    <h1>Lost something?<br><span>Let's bring it back.</span></h1>
+    <p>A shared campus space to report lost belongings, post found items, and reconnect people with what matters.</p>
+    <a class="button button-light" href="{{ url_for('report') }}">Report an item <span>→</span></a>
+  </div>
+  <div class="hero-art" aria-hidden="true">
+    <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+    <div class="floating-card card-id"><span class="mini-icon">▣</span><b>Student ID</b><small>Found near library</small></div>
+    <div class="floating-card card-keys"><span class="mini-icon orange">⚿</span><b>Keys</b><small>Lost · Block B</small></div>
+    <div class="hero-circle">⌕</div>
+    <div class="spark spark-one">✦</div><div class="spark spark-two">✧</div>
+  </div>
+</section>
+<section class="stats">
+  <div><span class="stat-icon purple">▤</span><div><strong>{{ stats.total }}</strong><small>Total reports</small></div></div>
+  <div><span class="stat-icon red">⌕</span><div><strong>{{ stats.lost }}</strong><small>Lost items open</small></div></div>
+  <div><span class="stat-icon green">✓</span><div><strong>{{ stats.found }}</strong><small>Found items open</small></div></div>
+  <div><span class="stat-icon yellow">↗</span><div><strong>{{ stats.returned }}</strong><small>Items returned</small></div></div>
+</section>
+<section class="listing-section">
+  <div class="section-heading"><div><div class="eyebrow dark">CAMPUS COMMUNITY</div><h2>Browse reports</h2></div><span class="result-count">{{ items|length }} result{% if items|length != 1 %}s{% endif %}</span></div>
+  <form class="filters" method="get" action="{{ url_for('index') }}">
+    <label class="searchbox"><span>⌕</span><input name="q" placeholder="Search items, places..." value="{{ selected.q }}"></label>
+    <select name="type"><option value="">All types</option>{% for t in ["Lost","Found"] %}<option value="{{ t }}" {% if selected.type == t %}selected{% endif %}>{{ t }}</option>{% endfor %}</select>
+    <select name="category"><option value="">All categories</option>{% for c in categories %}<option value="{{ c }}" {% if selected.category == c %}selected{% endif %}>{{ c }}</option>{% endfor %}</select>
+    <select name="status"><option value="Open" {% if selected.status == "Open" %}selected{% endif %}>Open only</option><option value="Claimed" {% if selected.status == "Claimed" %}selected{% endif %}>Claimed</option><option value="Returned" {% if selected.status == "Returned" %}selected{% endif %}>Returned</option><option value="All" {% if selected.status == "All" %}selected{% endif %}>All statuses</option></select>
+    <button class="button button-dark" type="submit">Search</button>
+  </form>
+  {% if items %}
+  <div class="item-grid">
+    {% for item in items %}
+    <a class="item-card" href="{{ url_for('item_detail', item_id=item.id) }}">
+      <div class="item-card-top">
+        <span class="type-pill {{ item.item_type|lower }}">{{ "Lost item" if item.item_type == "Lost" else "Found item" }}</span>
+        <span class="status-dot {{ item.status|lower }}">{{ item.status }}</span>
+      </div>
+      <div class="item-illustration {{ item.category|lower|replace(' ','-') }}">
+        {% if item.category == "ID Card" %}▣{% elif item.category == "Books & Notes" %}▤{% elif item.category == "Electronics" %}▣{% elif item.category == "Keys" %}⚿{% elif item.category == "Wallet / Purse" %}▰{% elif item.category == "Clothing" %}♧{% elif item.category == "Bottle / Lunch Box" %}♜{% else %}✦{% endif %}
+      </div>
+      <div class="item-card-content"><span class="category-label">{{ item.category }}</span><h3>{{ item.title }}</h3><p>{{ item.description|truncate(100) }}</p>
+      <div class="item-meta"><span>⌖ {{ item.location }}</span><span>▦ {{ item.item_date }}</span></div></div>
+      <div class="card-footer">View details <span>→</span></div>
+    </a>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state"><div>⌕</div><h3>No reports found</h3><p>Try changing your search filters, or be the first to report an item.</p><a class="button button-dark" href="{{ url_for('report') }}">＋ Report an item</a></div>
+  {% endif %}
+</section>
+{% endblock %}

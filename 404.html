@@ -1,0 +1,3 @@
+{% extends "base.html" %}
+{% block title %}Not found{% endblock %}
+{% block content %}<div class="empty-state"><div>?</div><h2>Report not found</h2><p>This report may have been removed or the link may be incorrect.</p><a class="button button-dark" href="{{ url_for('index') }}">Back to home</a></div>{% endblock %}
